@@ -12,10 +12,16 @@ Testes de carga com várias instâncias simultâneas de um mesmo servidor echo e
 - **tcp_server.yaml**: arquivo de configuração dos pod's do cluster.
 
 **Rodando no linux**:
-Necessário instalar o docker;
-Necessário instalar o python;
-Necessaŕio instalar o kubernets;
-Necessaŕio isntalar o minikube;
+- Necessário instalar o docker;
+- Necessário instalar o python;
+- Necessaŕio instalar o kubernets;
+- Necessaŕio isntalar o minikube;
+
+Como usar scripts:
+
+./setup_cluster.sh --replicas "2 4 6 8 10" --messages "1 10 100 500 1000 10000 " --runs 10 
+
+./stop.sh 
 
 
 
