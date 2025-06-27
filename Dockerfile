@@ -18,4 +18,3 @@ COPY --from=builder /app/tcp-server .
 EXPOSE 12345
 
 CMD ["./tcp-server"]
-
