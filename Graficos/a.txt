@@ -1,1 +1,19 @@
+Creating docker container (CPUs=2, Memory=2200MB) ...
 
+Contenção de Recursos no Nó (Principalmente no Minikube)
+
+    Recursos Compartilhados: O Minikube, por padrão, roda seu cluster Kubernetes em uma única máquina virtual (VM) no seu computador. Quando você aumenta o número de pods para 8 ou 10, todas essas instâncias estão competindo pelos mesmos recursos limitados de CPU, memória, I/O de disco e largura de banda de rede daquela única VM.
+
+    Saturação do Nó: A VM do Minikube pode estar atingindo seu limite de saturação. Embora você adicione mais pods, a capacidade total do hardware subjacente não aumenta. Cada pod adicional pode estar consumindo uma pequena fatia de CPU e memória, mas o agendador do Kubernetes (kube-scheduler) e o runtime dos contêineres (containerd/docker) podem estar gastando mais tempo gerenciando as múltiplas réplicas do que o ganho de paralelismo oferece.
+
+    Troca de Contexto (Context Switching): Com muitas threads/goroutines ativas em muitos pods (um para cada conexão do cliente no seu servidor Echo), o sistema operacional do Minikube gasta mais tempo trocando entre esses contextos de execução, o que adiciona latência.
+
+Como Investigar e Confirmar:
+
+    Monitore o Minikube: Use o minikube dashboard ou comandos como kubectl top nodes e kubectl top pods durante o teste para ver o uso de CPU e memória do nó do Minikube e dos seus pods. Você provavelmente verá a CPU do nó principal saturada.
+
+    Aumente os Recursos do Minikube: Tente iniciar o Minikube com mais CPU e memória:
+
+    minikube start --profile="$CLUSTER_NAME" --cpus 4 --memory 8192mb
+
+    (Ajuste os valores para o que seu hardware permite). Refaça os testes. Se a latência parar de aumentar ou diminuir para 8-10 réplicas, isso confirma que a contenção de recursos do nó era o problema.
